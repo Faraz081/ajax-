@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>products</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        #main {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+        .card {
+            background: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .card button {
+            margin-top: 10px;
+            padding: 8px 15px;
+            background: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="main"></div>
+
+    <script>
+        let http = new XMLHttpRequest();
+        http.open("GET", "data.json", true);
+        http.send();
+
+        http.onload = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                let product = JSON.parse(this.responseText);
+                let output = "";
+
+                product.forEach((item) => {
+                    output += `
+                        <div class="card">
+                            <img src="${item.img}" alt="Product Image">
+                            <div class="title">${item.title}</div>
+                            <div class="price">${item.price} <span>€uro</span></div>
+                            <button class="add-to-cart" data-title="${item.title}">Add to cart</button>
+                        </div>`;
+                });
+
+                document.getElementById("main").innerHTML = output;
+
+                // Add Event Listener to buttons
+                document.querySelectorAll('.add-to-cart').forEach(button => {
+                    button.addEventListener('click', function() {
+                        let title = this.getAttribute('data-title');
+                        alert(`${title} has been added to the cart!`);
+                    });
+                });
+            }
+        };
+    </script>
+</body>
+</html>
